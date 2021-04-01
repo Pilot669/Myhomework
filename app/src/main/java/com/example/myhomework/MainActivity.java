@@ -18,8 +18,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import static android.view.View.GONE;
 
 public class MainActivity extends AppCompatActivity {
-
-
+    
 //    private Fragment_enter fragment_enter;
 //    private Fragment_chek_in fragment_chek_in;
 //
@@ -31,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        
+
 //        manager = getSupportFragmentManager();
 //
 //        fragment_enter = new Fragment_enter();
