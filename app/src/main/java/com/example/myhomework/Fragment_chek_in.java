@@ -30,6 +30,7 @@ public class Fragment_chek_in extends Fragment {
     Button regloginBtn;
     String password;
     String rLogin;
+    String email;
     String url = "https://soldout-t.supplerus.com/auth/";
 
     @Override
@@ -51,18 +52,19 @@ public class Fragment_chek_in extends Fragment {
 
                 rLogin = regLogin.getText() + "";
                 password = passwordText.getText() + "";
+                email = emailText.getText() +"";
 
-                if ( rLogin.length() == 0 || password.length() == 0) {
+                if ( email.length() == 0 || password.length() == 0) {
                     Toast.makeText(c, "Please fill in all fields", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                if ( rLogin.length() > 0 && password.length() > 0) {
+                if ( email.length() > 0 && password.length() > 0) {
                     //Do networking
                     Networking n = new Networking();
                     n.execute(url, Networking.NETWORK_STATE_REGISTER);
                     Toast.makeText(c, "Register Done", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(Fragment_chek_in.this,MainActivity.class);
+                    Intent intent = new Intent(Fragment_chek_in.this, MainActivity.class);
                     startActivity(intent);
                 }
 
