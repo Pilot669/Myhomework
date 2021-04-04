@@ -21,7 +21,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
 
-public class Fragment_chek_in extends Fragment {
+public class Fragment_chek_in extends MainActivity {
 
     Context c;
     EditText regLogin;
