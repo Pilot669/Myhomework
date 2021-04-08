@@ -15,7 +15,7 @@
         <TextView
             android:id="@+id/textView2"
             android:layout_width="234dp"
-            android:layout_height="39dp"
+            android:layout_height="wrap_content"
             android:layout_margin="13dp"
             android:layout_marginStart="13dp"
             android:layout_marginLeft="13dp"
@@ -27,7 +27,7 @@
             android:text="EmailAddress" />
 
         <EditText
-            android:id="@+id/editTextTextEmailAddress"
+            android:id="@+id/EmailAddress"
             android:layout_width="390dp"
             android:layout_height="40dp"
             android:layout_margin="13dp"
@@ -39,12 +39,12 @@
             android:layout_marginBottom="13dp"
             android:background="@color/white"
             android:ems="10"
-            android:inputType="textEmailAddress" />
+          />
 
         <TextView
             android:id="@+id/textView3"
             android:layout_width="243dp"
-            android:layout_height="39dp"
+            android:layout_height="wrap_content"
             android:layout_margin="13dp"
             android:layout_marginStart="13dp"
             android:layout_marginLeft="13dp"
@@ -56,7 +56,7 @@
             android:text="Password" />
 
         <EditText
-            android:id="@+id/editTextTextPassword"
+            android:id="@+id/Password"
             android:layout_width="match_parent"
             android:layout_height="36dp"
             android:layout_margin="13dp"
@@ -66,14 +66,27 @@
             android:layout_marginRight="13dp"
             android:background="@color/white"
             android:ems="10"
-            android:inputType="textPassword" />
+            />
 
         <Button
-            android:id="@+id/button7"
+            android:id="@+id/btn_login"
             android:layout_width="167dp"
             android:layout_height="wrap_content"
             android:layout_margin="13dp"
             android:baselineAligned="false"
             android:text="Enter" />
+
+
+        <TextView
+            android:id="@+id/tv_register"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/btn_login"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:textSize="15sp"
+            android:textColor="#ffffff"
+            android:text="Register Me" />
+
     </LinearLayout>
 </FrameLayout>

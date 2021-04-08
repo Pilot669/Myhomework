@@ -1,11 +1,11 @@
 package com.example.myhomework;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
-import androidx.fragment.app.Fragment;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentActivity;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,24 +14,19 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+//import com.google.android.gms.common.api.Response;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 
-public class Fragment_chek_in extends MainActivity {
+public class Fragment_chek_in extends FragmentActivity {
 
-    Context c;
-    EditText regLogin;
-    EditText passwordText;
-    EditText emailText;
-    Button regloginBtn;
-    String password;
-    String rLogin;
-    String email;
-    String url = "https://soldout-t.supplerus.com/auth/";
+    EditText etName, etEmail, etPassword;
+    Button btnRegister;
+
+    final String url_Register = "https://soldout-t.supplerus.com/auth/";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -39,126 +34,87 @@ public class Fragment_chek_in extends MainActivity {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_chek_in, container, false);
 
+//    @Override
+//    protected void onCreate(Bundle savedInstanceState) {
+//        super.onCreate(savedInstanceState);
+//        setContentView(R.layout.fragment_chek_in);
 
-        regLogin = (EditText) regLogin.findViewById(R.id.editTextText);
-        passwordText = (EditText) passwordText.findViewById(R.id.editTextTextPassword);
-        emailText = (EditText) emailText.findViewById(R.id.editTextTextEmailAddress);
-        regloginBtn = (Button) regloginBtn.findViewById(R.id.button2);
+        etName = (EditText) findViewById(R.id.Reg_login_neam);
+        etEmail = (EditText) findViewById(R.id.Reg_EmailAddress);
+        etPassword = (EditText) findViewById(R.id.Reg_Password);
+        btnRegister = (Button) findViewById(R.id.chek_in);
 
-        regloginBtn.setOnClickListener(new View.OnClickListener() {
+
+        btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //  _("Login button hit");
+                String Name = etName.getText().toString();
+                String Email = etEmail.getText().toString();
+                String Password = etPassword.getText().toString();
 
-                rLogin = regLogin.getText() + "";
-                password = passwordText.getText() + "";
-                email = emailText.getText() +"";
-
-                if ( email.length() == 0 || password.length() == 0) {
-                    Toast.makeText(c, "Please fill in all fields", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                if ( email.length() > 0 && password.length() > 0) {
-                    //Do networking
-                    Networking n = new Networking();
-                    n.execute(url, Networking.NETWORK_STATE_REGISTER);
-                    Toast.makeText(c, "Register Done", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(Fragment_chek_in.this, MainActivity.class);
-                    startActivity(intent);
-                }
-
+                new RegisterUser().execute(Name, Email, Password);
             }
         });
     }
 
 
-    //AsyncTask good for long running tasks
-    public class Networking extends AsyncTask {
 
-        public static final int NETWORK_STATE_REGISTER = 1;
+public class RegisterUser extends AsyncTask<String, Void, String>{
 
-        @Override
-        protected Object doInBackground(Object[] params) {
+    @Override
+    protected String doInBackground(String... strings) {
+        String Name = strings[0];
+        String Email = strings[1];
+        String Password = strings[2];
 
-            getJson((String) params[0], (Integer) params[1]);
-            return null;
-        }
-    }
+        String finalURL = url_Register + "?user_name=" + Name +
+                "&user_id=" + Email +
+                "&user_password=" + Password;
 
-    private void getJson(String url, int state) {
-        //Do a HTTP POST, more secure than GET
-        HttpClient httpClient = new DefaultHttpClient();
-        HttpPost request = new HttpPost(url);
-        List<NameValuePair> postParameters = new ArrayList<NameValuePair>();
+        try {
+            OkHttpClient okHttpClient = new OkHttpClient();
+            Request request = new Request.Builder()
+                    .url(finalURL)
+                    .get()
+                    .build();
+            Response response = null;
 
-        boolean valid = false;
-
-        switch (state) {
-            case Networking.NETWORK_STATE_REGISTER:
-                //Building key value pairs to be accessed on web
-                postParameters.add(new BasicNameValuePair("username", rLogin));
-                postParameters.add(new BasicNameValuePair("email", emailText));
-                postParameters.add(new BasicNameValuePair("password", password));
-
-                valid = true;
-
-
-                break;
-            default:
-                Toast.makeText(c, "Unknown state", Toast.LENGTH_SHORT).show();
-
-        }
-
-        if (valid == true) {
-            //Reads everything that comes from server
-            BufferedReader bufferedReader = null;
-            StringBuffer stringBuffer = new StringBuffer("");
             try {
-                UrlEncodedFormEntity entity = new UrlEncodedFormEntity(postParameters);
-                request.setEntity(entity);
+                response = okHttpClient.newCall(request).execute();
+                if (response.isSuccessful()) {
+                    String result = response.body().string();
 
-                //Send off to server
-                HttpResponse response = httpClient.execute(request);
-
-                //Reads response and gets content
-                bufferedReader = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
-
-                String line = "";
-                String LineSeparator = System.getProperty("line.separator");
-                //Read back server output
-                while ((line = bufferedReader.readLine()) != null) {
-                    stringBuffer.append(line + LineSeparator);
+                    if (result.equalsIgnoreCase("User registered successfully")) {
+                        showToast("Register successful");
+                        Intent i = new Intent(Fragment_chek_in.this,
+                               MainActivity.class);
+                        startActivity(i);
+                        finish();
+                    } else if (result.equalsIgnoreCase("User already exists")) {
+                        showToast("User already exists");
+                    } else {
+                        showToast("oop! please try again");
+                    }
                 }
-
-                bufferedReader.close();
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
-            decodeResultIntoJson(stringBuffer.toString());
-        } else {
-        }
-    }
-
-    private void decodeResultIntoJson(String response) {
-        if (response.contains("error")) {
-            try {
-                JSONObject jo = new JSONObject(response);
-                String error = jo.getString("error");
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-        try {
-            JSONObject jo = new JSONObject(response);
-
-            String success = jo.getString("success");
-            String message = jo.getString("message");
-        } catch (JSONException e) {
+        }catch (Exception e){
             e.printStackTrace();
         }
+
+        return null;
     }
+}
 
 
+    public void showToast(final String Text){
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(Fragment_chek_in.this,
+                        Text, Toast.LENGTH_LONG).show();
+            }
+        });
+    }
 }
