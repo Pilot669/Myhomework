@@ -21,8 +21,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".Fragment_chek_in" />
-        <activity android:name=".DashboardActivity"></activity>
+
 
     </application>
 
