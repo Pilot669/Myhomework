@@ -36,9 +36,7 @@ public class MainActivity extends AppCompatActivity {
             ft.commit();
 
         }
-
-
-
+        
     }
 
 
